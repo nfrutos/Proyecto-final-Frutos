@@ -1,0 +1,49 @@
+h1{
+  margin-top: 10%;
+  text-align: center;
+}
+
+.navbar {
+  background-color: #343a40;
+}
+
+.cart-widget {
+  display: flex;
+  align-items: center;
+}
+
+.cart-widget img {
+  width: 30px; 
+}
+
+.cart-count {
+  color: white;
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.product-list {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  margin-left: 20%;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 60%;
+}
+
+.product {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.product button {
+  margin: 10px;
+}
+
+.item-list-container{
+  text-align: center;
+}

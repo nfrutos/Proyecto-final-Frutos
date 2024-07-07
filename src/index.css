@@ -1,0 +1,6 @@
+/* src/index.css */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+.navbar-collapse{
+  justify-content: center;
+}

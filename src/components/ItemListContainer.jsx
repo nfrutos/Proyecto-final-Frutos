@@ -13,5 +13,5 @@ const ItemListContainer = ({ greeting }) => {
   );
 };
 
-// Exportamos el componente ItemListContainer para que pueda ser utilizado en otros archivos
+// Exporta el componente ItemListContainer para que pueda ser utilizado en otros archivos
 export default ItemListContainer;

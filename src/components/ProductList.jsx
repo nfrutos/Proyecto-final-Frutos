@@ -1,7 +1,7 @@
 // Módulos necesarios de React
 import React, { useContext } from 'react';
 // Importo el contexto del carrito
-import { CartContext } from '../context/CartContext';
+import { CartContext } from './../context/CartContext';
 
 // Defino el componente ProductList
 const ProductList = () => {

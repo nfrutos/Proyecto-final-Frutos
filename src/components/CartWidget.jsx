@@ -8,10 +8,7 @@ import myImage from './../assets/carrito.png';
 // Defino componente CartWidget
 const CartWidget = () => {
   // Contexto del carrito
-  const { products } = useContext(CartContext);
-
-  // Calcula la cantidad total de productos en el carrito
-  const totalCount = products.reduce((sum, product) => sum + product.count, 0);
+  const { totalCount } = useContext(CartContext);
 
   // Renderiza el widget del carrito
   return (

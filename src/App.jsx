@@ -1,33 +1,32 @@
-// Módulos necesarios de React
 import React from 'react';
-// Importo el componente Navbar
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-// Importo el componente ItemListContainer
 import ItemListContainer from './components/ItemListContainer';
-// Importo el componente ProductList
-import ProductList from './components/ProductList';
-// Importo el proveedor del contexto del carrito
+import ItemDetailContainer from './components/ItemDetailContainer';
 import { CartProvider } from './context/CartContext';
-// Importo los estilos de la aplicación
 import './App.css';
 
-// Defino el componente principal de la aplicación
+// Componente principal de la aplicación
 const App = () => {
-  // Renderiza el componente principal
   return (
-    // Indexo la aplicación en el CartProvider para que todos los componentes hijos puedan acceder al contexto del carrito
+    // Proveedor del contexto del carrito que envuelve toda la aplicación
     <CartProvider>
-      <div>
-        {/* Renderiza la barra de navegación */}
+      {/* Configuración del router con basename */}
+      <Router basename="/PreEntrega1Frutos">
+        {/* Barra de navegación */}
         <Navbar />
-        {/* Renderiza el contenedor de la lista de ítems con una prop 'greeting' */}
-        <ItemListContainer greeting="Productos" />
-        {/* Renderiza la lista de productos */}
-        <ProductList />
-      </div>
+        {/* Definición de rutas */}
+        <Routes>
+          {/* Ruta para el listado de productos */}
+          <Route path="/" element={<ItemListContainer greeting="Productos" />} />
+          {/* Ruta para productos por categoría */}
+          <Route path="/category/:id" element={<ItemListContainer />} />
+          {/* Ruta para el detalle de un producto */}
+          <Route path="/item/:id" element={<ItemDetailContainer />} />
+        </Routes>
+      </Router>
     </CartProvider>
   );
 };
 
-// Exporta el componente App para que pueda ser utilizado en otros archivos
 export default App;

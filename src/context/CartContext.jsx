@@ -1,6 +1,7 @@
 // Módulos necesarios de React
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../backend/firebase/firebaseConfig'; // Importa la configuración de Firebase
 
 // Creo el contexto para el carrito
 export const CartContext = createContext();
@@ -8,51 +9,71 @@ export const CartContext = createContext();
 // Defino el proveedor del contexto del carrito
 export const CartProvider = ({ children }) => {
   // Estado para los productos del carrito
-  const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
 
-  // Cargar productos desde el archivo JSON al montar el componente
+  // Cargar productos desde Firestore al montar el componente
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await axios.get('http://localhost:5000/products');
-      const productsWithCount = response.data.map(product => ({
-        ...product,
-        count: 0
+      const productsCollection = collection(db, 'products');
+      const productsSnapshot = await getDocs(productsCollection);
+      const productsWithCount = productsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        count: 0 // Agrega el campo 'count' inicializado en 0
       }));
-      setProducts(productsWithCount);
+      setCartItems(productsWithCount);
     };
 
     fetchProducts();
   }, []);
 
   // Función para agregar productos al carrito
-  const addToCart = (id, quantity) => {
-    setProducts(products.map(product => {
-      if (product.id === id && product.count + quantity <= product.stock) {
-        return { ...product, count: product.count + quantity };
+  const addToCart = (product, quantity) => {
+    setCartItems(prevItems => {
+      const itemIndex = prevItems.findIndex(item => item.id === product.id);
+      let updatedItems;
+
+      if (itemIndex >= 0) {
+        // El producto ya está en el carrito, se actualiza la cantidad
+        const updatedItem = {
+          ...prevItems[itemIndex],
+          count: prevItems[itemIndex].count + quantity <= product.stock
+            ? prevItems[itemIndex].count + quantity
+            : prevItems[itemIndex].count
+        };
+        updatedItems = [...prevItems];
+        updatedItems[itemIndex] = updatedItem;
+      } else {
+        // El producto no está en el carrito, se agrega
+        const newItem = { ...product, count: quantity };
+        updatedItems = [...prevItems, newItem];
       }
-      return product;
-    }));
+
+      return updatedItems;
+    });
   };
 
   // Función para remover productos del carrito
   const removeFromCart = (id) => {
-    setProducts(products.map(product => {
-      if (product.id === id && product.count > 0) {
-        return { ...product, count: product.count - 1 };
-      }
-      return product;
-    }));
+    setCartItems(prevItems => {
+      return prevItems.map(product => {
+        if (product.id === id && product.count > 0) {
+          return { ...product, count: product.count - 1 };
+        }
+        return product;
+      });
+    });
   };
 
   // Calcula el total de productos en el carrito
-  const totalCount = products.reduce((sum, product) => sum + product.count, 0);
+  const totalCount = cartItems.reduce((sum, product) => sum + product.count, 0);
 
   // Calcula el monto total del carrito
-  const totalAmount = products.reduce((acc, product) => acc + product.price * product.count, 0);
+  const totalAmount = cartItems.reduce((acc, product) => acc + product.price * product.count, 0);
 
   // Le doy el contexto del carrito a los componentes hijos
   return (
-    <CartContext.Provider value={{ products, addToCart, removeFromCart, totalCount, totalAmount }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, totalCount, totalAmount }}>
       {children}
     </CartContext.Provider>
   );

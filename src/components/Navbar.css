@@ -1,14 +1,7 @@
 .navbar{
     align-items: center;
     flex-direction: row-reverse;
-    background-color: #B4BEC9;
-    border-radius: 22%;
-    border-radius: 24%;
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    margin: 1rem;
+    background-color: #D9A273 !important;
 }
 .container-fluid .navbar .container{
     display: flex;
